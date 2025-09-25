@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% block title %}
+certificate
+      
+      {% endblock title %}
+
+{% block content %}
+<section class="certificates-section py-5">
+    <div class="container">
+        <div class="section-heading text-center mb-5">
+            <h1 class="fw-bold">My Certificates</h1>
+            <div class="heading-line"></div>
+            <p class="lead mt-3">Professional certifications and courses I've completed.</p>
+        </div>
+        
+        <div class="row g-4">
+            {% if certificates %}
+                {% for certificate in certificates %}
+                    <div class="col-md-6 col-lg-4">
+                        <div class="certificate-card card bg-dark-accent h-100">
+                            <img src="{{certificate.image.url}}" class="card-img-top certificate-image" alt="no image">
+                            <div class="card-body">
+                                <h3 class="card-title h5"></h3>
+                                <h4 class="organization h6 text-primary">{{certificate.title}}</h4>
+                                <p class="date"><i class="far fa-calendar-alt me-2"></i>{{certificate.date_earned}}</p>
+                                <p class="card-text">{{certificate.description}}</p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="col-12 text-center">
+                    <div class="empty-state p-5">
+                        <i class="fas fa-certificate fa-4x mb-3 text-muted"></i>
+                        <h3>No Certificates Yet</h3>
+                        <p>Certificates will be added soon!</p>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}
