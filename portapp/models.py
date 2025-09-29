@@ -7,8 +7,7 @@ class Contact(models.Model):
     name = models.CharField(max_length = 100)
     email = models.EmailField()
     message = models.TextField()
-    subject = models.TextField()
-    # created_at = models.DateTimeField(default=timezone.now)
+    subject1 = models.TextField() # named as subject1 beacause subject is a also used for send_mail function
 
 class Certificate(models.Model):
     title = models.CharField(max_length=100)
