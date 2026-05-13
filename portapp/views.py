@@ -1,3 +1,5 @@
+from urllib import request
+
 from django.shortcuts import render
 from django.core.mail import send_mail, EmailMessage
 from django.template.loader import render_to_string
@@ -50,3 +52,16 @@ def contact(request):
 
 def about(request):
     return render(request,'portapp/about.html')
+
+def tools(request):
+
+    return render(request,'portapp/tools.html')
+
+def movieguide(request):
+    
+    return render(request,'portapp/movieguide.html')
+
+def usefulsites(request):
+
+    return render(request,'portapp/sites.html')
+

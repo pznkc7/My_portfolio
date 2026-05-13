@@ -1,0 +1,52 @@
+{% extends "base.html" %} 
+{% load static %}
+{% block title %}
+Movie Guide
+{% endblock title %}
+
+{% block content %}
+<section class="movie-guide-section py-5">
+    <div class="container">
+        <div class="section-heading text-center mb-5">
+            <h2 class="fw-bold">Movie Watch Guide</h2>
+            <div class="heading-line"></div>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-4">
+                <div class="card bg-dark-accent h-100">
+                    <div class="card-body text-center py-5">
+                        <h3 class="card-title h4">Action & Adventure</h3>
+                        <p class="card-text mb-4">Explore thrilling action and adventure movies that will keep you on the edge of your seat.</p>
+                        <a href="https://www.imdb.com/list/ls055386972/" class="btn btn-primary btn-sm" target="_blank">
+                            <i class="fas fa-arrow-right me-2"></i>View Guide
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">                
+                <div class="card bg-dark-accent h-100">
+                    <div class="card-body text-center py-5">
+                        <h3 class="card-title h4">Comedy</h3>
+                        <p class="card-text mb-4">Discover a collection of hilarious comedy movies that will have you laughing out loud.</p>
+                        <a href="https://www.imdb.com/list/ls055386972/" class="btn btn-primary btn-sm" target="_blank">
+                            <i class="fas fa-arrow-right me-2"></i>View Guide
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="card bg-dark-accent h-100">
+                    <div class="card-body text-center py-5">
+                        <h3 class="card-title      h4">Drama</h3>           
+                        <p class="card-text mb-4">Immerse yourself in compelling dramas that explore the depths of human emotion and experience.</p>
+                        <a href="https://www.imdb.com/list/ls055386972/" class="btn btn-primary btn-sm" target="_blank">
+                            <i class="fas fa-arrow-right me-2"></i>View Guide
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock content %}

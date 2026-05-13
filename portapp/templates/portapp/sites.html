@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}
+Useful Sites
+{% endblock title %}    
+
+{% block content %}
+<section class="useful-sites-section py-5">
+    <div class="container">
+        <div class="section-heading text-center mb-5">
+            <h2 class="fw-bold">Useful Sites for Developers</h2>
+            <div class="heading-line"></div>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-4">
+                <div class="card bg-dark-accent h-100">
+                    <div class="card-body text-center py-5">
+                        <h3 class="card-title h4">Stack Overflow</h3>
+                        <p class="card-text mb-4">A popular Q&A site for developers to ask and answer programming questions.</p>
+                        <a href="https://stackoverflow.com/" class="btn btn-primary btn-sm" target="_blank">
+                            <i class="fas fa-arrow-right me-2"></i>Visit Site
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="card bg-dark-accent h-100">
+                    <div class="card-body text-center py-5">
+                        <h3 class="card-title h4">GitHub</h3>
+                        <p class="card-text mb-4">A platform for hosting and collaborating on code repositories.</p>
+                        <a href="https://github.com/" class="btn btn-primary btn-sm" target="_blank">
+                            <i class="fas fa-arrow-right me-2"></i>Visit Site
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="card bg-dark-accent h-100">
+                    <div class="card-body text-center py-5">
+                        <h3 class="card-title h4">MDN Web Docs</h3>
+                        <p class="card-text mb-4">Comprehensive documentation and resources for web developers.</p>
+                        <a href="https://developer.mozilla.org/" class="btn btn-primary btn-sm" target="_blank">
+                            <i class="fas fa-arrow-right me-2"></i>Visit Site
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center mt-4">
+            <a href="{% url 'tools' %}" class="btn btn-sm btn-outline-primary">
+                <i class="fas fa-chevron-down me-2"></i> QUICK TOOLS
+            </a>
+        </div>
+    </div>
+</section>
+
+<section class="cta-section py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="cta-card text-center p-5">
+                    <h2 class="fw-bold mb-4">Explore More Resources</h2>
+                    <p class="mb-4">Check out our movie watch guide and other useful tools to enhance your development journey.</p>
+                    <a href="{% url 'movieguide' %}" class="btn btn-primary btn-lg">
+                        <i class="fas fa-film me-2"></i> Movie Watch Guide
+                    </a>
+                    <a href="{% url 'tools' %}" class="btn btn-secondary btn-lg ms-3">
+                        <i class="fas fa-tools me-2"></i> More Tools
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock content %}

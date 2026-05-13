@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}
+Tools
+      
+      {% endblock title %}  #This is tools page content 
+
+    
+
+{% block content %}
+
+<section class="tools-section py-5">
+    <div class="container">
+        <div class="section-heading text-center mb-5">
+            <h2 class="fw-bold">Tools & Resources</h2>
+            <div class="heading-line"></div>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-4">
+                <div class="card bg-dark-accent h-100">
+                    <div class="card-body text-center py-5">
+                        <div class="icon-box mb-4">
+                            <i class="fas fa-film fa-3x text-primary"></i>
+                        </div>
+                        <h3 class="card-title h4">Movie Watch Guide</h3>
+                        <p class="card-text mb-4">Discover curated movie recommendations and watch guides for all genres.</p>
+                        <a href="{% url "movieguide" %}" class="btn btn-primary btn-sm">
+                            <i class="fas fa-arrow-right me-2"></i>View Guide
+                        </a>
+                    </div>
+                   
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="card bg-dark-accent h-100">
+                    <div class="card-body text-center py-5">
+                        <div class="icon-box mb-4">
+                            <i class="fas fa-globe fa-3x text-primary"></i>
+                        </div>
+                        <h3 class="card-title h4">Useful Sites</h3>
+                        <p class="card-text mb-4">Explore a collection of useful websites for developers and designers.</p>
+                        <a href="{% url "usefulsites" %}" class="btn btn-primary btn-sm">
+                            <i class="fas fa-arrow-right me-2"></i>View Sites
+                        </a>
+                    </div>
+                   
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock content %}
