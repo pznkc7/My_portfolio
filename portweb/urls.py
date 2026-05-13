@@ -31,6 +31,7 @@ urlpatterns = [
     path("tools/",views.tools, name='tools'),
     path("movieguide/",views.movieguide, name='movieguide'),
     path("usefulsites/",views.usefulsites, name='usefulsites'),
+    path("music_player/",views.music_player, name='music_player'),
 
 ]+static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
 

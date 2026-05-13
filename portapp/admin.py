@@ -6,9 +6,13 @@ from .models import *
 class ContactAdmin(admin.ModelAdmin):
     list_display=('name','email','message','subject1')
 
-
-
 @admin.register(Certificate)
 class CertificateAdmin(admin.ModelAdmin):
     list_display=('title','organization','description','date_earned')
+
+@admin.register(Song)
+class SongAdmin(admin.ModelAdmin):
+    list_display = ('title', 'artist', 'created_at')
+
+
 

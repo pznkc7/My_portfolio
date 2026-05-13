@@ -65,3 +65,9 @@ def usefulsites(request):
 
     return render(request,'portapp/sites.html')
 
+def music_player(request):
+    songs = Song.objects.all()
+    context = {
+        'songs': songs
+    }
+    return render(request, 'portapp/music_player.html', context)

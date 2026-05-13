@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Music Player{% endblock %}
+
+{% block content %}
+<section class="py-5">
+  <div class="container">
+    <div class="section-heading text-center mb-5">
+      <h2 class="fw-bold">🎵 Music Player</h2>
+      <div class="heading-line"></div>
+    </div>
+
+    <!-- Player Bar -->
+    <div class="text-center mb-5">
+      <p id="now-playing" class="fw-bold mb-3">Select a song below</p>
+
+      <audio id="audio-player" class="w-100 mb-3" style="max-width: 500px;"></audio>
+
+      <!-- Controls -->
+      <div class="d-flex justify-content-center gap-3 mt-2">
+        <button class="btn btn-outline-secondary" onclick="prevSong()">
+          <i class="fas fa-backward"></i> Prev
+        </button>
+        <button class="btn btn-outline-secondary" onclick="nextSong()">
+          <i class="fas fa-forward"></i> Next
+        </button>
+        <button class="btn btn-outline-warning" id="repeat-btn" onclick="toggleRepeat()">
+          <i class="fas fa-redo"></i> Repeat
+        </button>
+        <button class="btn btn-outline-info" id="shuffle-btn" onclick="toggleShuffle()">
+          <i class="fas fa-random"></i> Shuffle
+        </button>
+      </div>
+    </div>
+
+    <!-- Song Cards -->
+    <div class="row g-4">
+      {% for song in songs %}
+      <div class="col-md-6 col-lg-4">
+        <div class="card bg-dark-accent h-100">
+          <div class="card-body text-center py-4">
+            <i class="fas fa-music fa-2x text-primary mb-3"></i>
+            <h5 class="card-title">{{ song.title }}</h5>
+            <p class="text-muted mb-3">{{ song.artist }}</p>
+            <button class="btn btn-primary btn-sm song-btn" 
+              data-index="{{ forloop.counter0 }}">
+              <i class="fas fa-play me-1"></i> Play
+            </button>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <div class="col-12 text-center">
+        <i class="fas fa-music fa-4x text-muted mb-3"></i>
+        <h4>No songs uploaded yet.</h4>
+        <p class="text-muted">Admin can add songs via the Django admin panel.</p>
+      </div>
+      {% endfor %}
+    </div>
+
+  </div>
+</section>
+
+<script>
+  // Build playlist array from Django template
+  const playlist = [
+    {% for song in songs %}
+    {
+      title: "{{ song.title }}",
+      artist: "{{ song.artist }}",
+      url: "{{ song.audio_file.url }}"
+    },
+    {% endfor %}
+  ];
+
+  let currentIndex = 0;
+  let isRepeat = false;
+  let isShuffle = false;
+
+  const player = document.getElementById('audio-player');
+  const nowPlaying = document.getElementById('now-playing');
+  const repeatBtn = document.getElementById('repeat-btn');
+  const shuffleBtn = document.getElementById('shuffle-btn');
+
+  // Play song by index
+  function playSong(index) {
+    currentIndex = index;
+    const song = playlist[index];
+    player.src = song.url;
+    player.play();
+    nowPlaying.textContent = '▶ Now Playing: ' + song.title + ' — ' + song.artist;
+
+    // Update all card buttons
+    document.querySelectorAll('.song-btn').forEach((btn, i) => {
+      if (i === index) {
+        btn.innerHTML = '<i class="fas fa-pause me-1"></i> Playing';
+        btn.classList.replace('btn-primary', 'btn-success');
+      } else {
+        btn.innerHTML = '<i class="fas fa-play me-1"></i> Play';
+        btn.classList.replace('btn-success', 'btn-primary');
+      }
+    });
+  }
+
+  // Previous song
+  function prevSong() {
+    let index = currentIndex - 1;
+    if (index < 0) index = playlist.length - 1;
+    playSong(index);
+  }
+
+  // Next song
+  function nextSong() {
+    let index;
+    if (isShuffle) {
+      index = Math.floor(Math.random() * playlist.length);
+    } else {
+      index = currentIndex + 1;
+      if (index >= playlist.length) index = 0;
+    }
+    playSong(index);
+  }
+
+  // Toggle repeat
+  function toggleRepeat() {
+    isRepeat = !isRepeat;
+    player.loop = isRepeat;
+    repeatBtn.classList.toggle('btn-warning', isRepeat);
+    repeatBtn.classList.toggle('btn-outline-warning', !isRepeat);
+  }
+
+  // Toggle shuffle
+  function toggleShuffle() {
+    isShuffle = !isShuffle;
+    shuffleBtn.classList.toggle('btn-info', isShuffle);
+    shuffleBtn.classList.toggle('btn-outline-info', !isShuffle);
+  }
+
+  // Auto play next when song ends
+  player.addEventListener('ended', function () {
+    if (!isRepeat) {
+      nextSong();
+    }
+  });
+
+  // Card button click handlers
+  document.querySelectorAll('.song-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      const index = parseInt(this.getAttribute('data-index'));
+      playSong(index);
+    });
+  });
+</script>
+{% endblock %}
