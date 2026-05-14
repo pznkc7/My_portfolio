@@ -3,152 +3,702 @@
 {% block title %}Music Player{% endblock %}
 
 {% block content %}
-<section class="py-5">
-  <div class="container">
-    <div class="section-heading text-center mb-5">
-      <h2 class="fw-bold">🎵 Music Player</h2>
-      <div class="heading-line"></div>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap');
+
+  .sc-page {
+    background: #0f0f0f;
+    min-height: 100vh;
+    padding: 40px 0 80px;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .sc-container {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .sc-heading {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+
+  .sc-heading h2 {
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    color: #666;
+    text-transform: uppercase;
+    margin: 0;
+  }
+
+  /* Main player card */
+  .sc-player-card {
+    background: #1a1a1a;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid #2a2a2a;
+  }
+
+  /* Top section: art + meta */
+  .sc-now-playing {
+    display: flex;
+    gap: 16px;
+    padding: 20px 20px 16px;
+    align-items: center;
+  }
+
+  .sc-cover {
+    width: 72px;
+    height: 72px;
+    border-radius: 10px;
+    background: #f26f23;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.4s ease;
+  }
+
+  .sc-cover i {
+    font-size: 28px;
+    color: rgba(255,255,255,0.8);
+  }
+
+  .sc-meta {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .sc-song-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+    margin: 0 0 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .sc-song-artist {
+    font-size: 13px;
+    color: #888;
+    margin: 0;
+  }
+
+  .sc-likes {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    color: #555;
+    margin-top: 6px;
+  }
+
+  /* Waveform */
+  .sc-waveform-wrap {
+    padding: 0 20px;
+    height: 48px;
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+    cursor: pointer;
+    position: relative;
+  }
+
+  .sc-wf-bar {
+    flex: 1;
+    border-radius: 1px;
+    background: #333;
+    transition: background 0.1s;
+  }
+
+  /* Seek row */
+  .sc-seek-row {
+    padding: 8px 20px 4px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .sc-time {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: #666;
+    min-width: 34px;
+    text-align: center;
+  }
+
+  .sc-seek-wrap {
+    flex: 1;
+    position: relative;
+    height: 16px;
+    display: flex;
+    align-items: center;
+  }
+
+  .sc-seek-track {
+    width: 100%;
+    height: 3px;
+    background: #333;
+    border-radius: 2px;
+    position: relative;
+  }
+
+  .sc-seek-fill {
+    height: 100%;
+    background: #f26f23;
+    border-radius: 2px;
+    width: 0%;
+    pointer-events: none;
+    transition: width 0.05s linear;
+  }
+
+  .sc-seek-thumb {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #fff;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%) translateX(-50%);
+    pointer-events: none;
+    left: 0%;
+    opacity: 0;
+    transition: opacity 0.15s, left 0.05s linear;
+  }
+
+  .sc-seek-wrap:hover .sc-seek-thumb {
+    opacity: 1;
+  }
+
+  .sc-seek-input {
+    position: absolute;
+    width: 100%;
+    height: 24px;
+    opacity: 0;
+    cursor: pointer;
+    margin: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 0;
+  }
+
+  /* Controls row */
+  .sc-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 12px 20px 8px;
+  }
+
+  .sc-ctrl-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: #666;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    transition: color 0.15s, background 0.15s;
+    font-size: 18px;
+  }
+
+  .sc-ctrl-btn:hover {
+    color: #ccc;
+    background: #2a2a2a;
+  }
+
+  .sc-ctrl-btn.active {
+    color: #f26f23;
+  }
+
+  .sc-play-btn {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: #f26f23;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 22px;
+    transition: background 0.15s, transform 0.1s;
+    flex-shrink: 0;
+  }
+
+  .sc-play-btn:hover {
+    background: #d95f1a;
+    transform: scale(1.05);
+  }
+
+  .sc-play-btn:active {
+    transform: scale(0.97);
+  }
+
+  /* Volume row */
+  .sc-vol-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 20px 16px;
+    justify-content: flex-end;
+  }
+
+  .sc-vol-icon {
+    font-size: 15px;
+    color: #555;
+  }
+
+  .sc-vol-wrap {
+    width: 80px;
+    height: 3px;
+    background: #333;
+    border-radius: 2px;
+    position: relative;
+  }
+
+  .sc-vol-fill {
+    height: 100%;
+    background: #555;
+    border-radius: 2px;
+    width: 80%;
+    pointer-events: none;
+  }
+
+  .sc-vol-input {
+    position: absolute;
+    width: 100%;
+    height: 20px;
+    opacity: 0;
+    cursor: pointer;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 0;
+    margin: 0;
+  }
+
+  /* Queue */
+  .sc-queue {
+    border-top: 1px solid #222;
+  }
+
+  .sc-queue-label {
+    padding: 12px 20px 6px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    color: #555;
+    text-transform: uppercase;
+  }
+
+  .sc-track-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 9px 20px;
+    cursor: pointer;
+    transition: background 0.1s;
+    border-radius: 0;
+  }
+
+  .sc-track-row:hover {
+    background: #222;
+  }
+
+  .sc-track-row.active {
+    background: #1e1e1e;
+  }
+
+  .sc-track-num {
+    font-size: 12px;
+    color: #444;
+    width: 18px;
+    text-align: center;
+    flex-shrink: 0;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .sc-track-num.playing-num {
+    color: #f26f23;
+  }
+
+  .sc-mini-art {
+    width: 34px;
+    height: 34px;
+    border-radius: 6px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .sc-mini-art i {
+    font-size: 15px;
+    color: rgba(255,255,255,0.7);
+  }
+
+  .sc-track-meta {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .sc-track-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: #ccc;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0 0 2px;
+  }
+
+  .sc-track-row.active .sc-track-name {
+    color: #f26f23;
+  }
+
+  .sc-track-by {
+    font-size: 11px;
+    color: #555;
+    margin: 0;
+  }
+
+  .sc-track-dur {
+    font-size: 11px;
+    color: #555;
+    font-family: 'DM Mono', monospace;
+    flex-shrink: 0;
+  }
+
+  /* empty state */
+  .sc-empty {
+    text-align: center;
+    padding: 48px 20px;
+    color: #555;
+  }
+
+  .sc-empty i {
+    font-size: 40px;
+    display: block;
+    margin-bottom: 12px;
+    color: #333;
+  }
+
+  .sc-empty p {
+    font-size: 14px;
+    margin: 0;
+  }
+</style>
+
+<div class="sc-page">
+  <div class="sc-container">
+
+    <div class="sc-heading">
+      <h2>Music</h2>
     </div>
 
-    <!-- Player Bar -->
-    <div class="text-center mb-5">
-      <p id="now-playing" class="fw-bold mb-3">Select a song below</p>
+    <div class="sc-player-card">
 
-      <audio id="audio-player" class="w-100 mb-3" style="max-width: 500px;"></audio>
+      {% if songs %}
 
-      <!-- Controls -->
-      <div class="d-flex justify-content-center gap-3 mt-2">
-        <button class="btn btn-outline-secondary" onclick="prevSong()">
-          <i class="fas fa-backward"></i> Prev
-        </button>
-        <button class="btn btn-outline-secondary" onclick="nextSong()">
-          <i class="fas fa-forward"></i> Next
-        </button>
-        <button class="btn btn-outline-warning" id="repeat-btn" onclick="toggleRepeat()">
-          <i class="fas fa-redo"></i> Repeat
-        </button>
-        <button class="btn btn-outline-info" id="shuffle-btn" onclick="toggleShuffle()">
-          <i class="fas fa-random"></i> Shuffle
-        </button>
-      </div>
-    </div>
-
-    <!-- Song Cards -->
-    <div class="row g-4">
-      {% for song in songs %}
-      <div class="col-md-6 col-lg-4">
-        <div class="card bg-dark-accent h-100">
-          <div class="card-body text-center py-4">
-            <i class="fas fa-music fa-2x text-primary mb-3"></i>
-            <h5 class="card-title">{{ song.title }}</h5>
-            <p class="text-muted mb-3">{{ song.artist }}</p>
-            <button class="btn btn-primary btn-sm song-btn" 
-              data-index="{{ forloop.counter0 }}">
-              <i class="fas fa-play me-1"></i> Play
-            </button>
-          </div>
+      <!-- Now playing -->
+      <div class="sc-now-playing">
+        <div class="sc-cover" id="main-cover">
+          <i class="fas fa-music"></i>
+        </div>
+        <div class="sc-meta">
+          <p class="sc-song-title" id="main-title">Select a track</p>
+          <p class="sc-song-artist" id="main-artist">—</p>
         </div>
       </div>
-      {% empty %}
-      <div class="col-12 text-center">
-        <i class="fas fa-music fa-4x text-muted mb-3"></i>
-        <h4>No songs uploaded yet.</h4>
-        <p class="text-muted">Admin can add songs via the Django admin panel.</p>
-      </div>
-      {% endfor %}
-    </div>
 
+      <!-- Waveform -->
+      <div class="sc-waveform-wrap" id="waveform"></div>
+
+      <!-- Seek bar -->
+      <div class="sc-seek-row">
+        <span class="sc-time" id="time-cur">0:00</span>
+        <div class="sc-seek-wrap">
+          <div class="sc-seek-track">
+            <div class="sc-seek-fill" id="seek-fill"></div>
+            <div class="sc-seek-thumb" id="seek-thumb"></div>
+          </div>
+          <input type="range" class="sc-seek-input" id="seek-input" min="0" max="100" value="0" step="1">
+        </div>
+        <span class="sc-time" id="time-total">0:00</span>
+      </div>
+
+      <!-- Controls -->
+      <div class="sc-controls">
+        <button class="sc-ctrl-btn" id="btn-shuffle" onclick="toggleShuffle()" title="Shuffle">
+          <i class="fas fa-random"></i>
+        </button>
+        <button class="sc-ctrl-btn" onclick="prevSong()" title="Previous">
+          <i class="fas fa-step-backward"></i>
+        </button>
+        <button class="sc-play-btn" id="play-btn" onclick="togglePlay()" title="Play / Pause">
+          <i class="fas fa-play" id="play-icon"></i>
+        </button>
+        <button class="sc-ctrl-btn" onclick="nextSong()" title="Next">
+          <i class="fas fa-step-forward"></i>
+        </button>
+        <button class="sc-ctrl-btn" id="btn-repeat" onclick="toggleRepeat()" title="Repeat">
+          <i class="fas fa-redo"></i>
+        </button>
+      </div>
+
+      <!-- Volume -->
+      <div class="sc-vol-row">
+        <i class="fas fa-volume-down sc-vol-icon"></i>
+        <div class="sc-vol-wrap">
+          <div class="sc-vol-fill" id="vol-fill"></div>
+          <input type="range" class="sc-vol-input" id="vol-input" min="0" max="100" value="80" step="1">
+        </div>
+        <i class="fas fa-volume-up sc-vol-icon"></i>
+      </div>
+
+      <!-- Queue -->
+      <div class="sc-queue">
+        <div class="sc-queue-label">Queue</div>
+        <div id="track-list">
+          {% for song in songs %}
+          <div class="sc-track-row" data-index="{{ forloop.counter0 }}" onclick="loadAndPlay({{ forloop.counter0 }})">
+            <div class="sc-track-num" id="num-{{ forloop.counter0 }}">{{ forloop.counter }}</div>
+            <div class="sc-mini-art" id="art-{{ forloop.counter0 }}" style="background: #2a2a2a;">
+              <i class="fas fa-music"></i>
+            </div>
+            <div class="sc-track-meta">
+              <p class="sc-track-name">{{ song.title }}</p>
+              <p class="sc-track-by">{{ song.artist }}</p>
+            </div>
+            <span class="sc-track-dur">—</span>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      {% else %}
+      <div class="sc-empty">
+        <i class="fas fa-music"></i>
+        <p>No songs uploaded yet.<br>Admin can add songs via the Django admin panel.</p>
+      </div>
+      {% endif %}
+
+    </div>
   </div>
-</section>
+</div>
 
 <script>
-  // Build playlist array from Django template
+  // Build playlist from Django template
   const playlist = [
     {% for song in songs %}
     {
       title: "{{ song.title }}",
       artist: "{{ song.artist }}",
       url: "{{ song.audio_file.url }}"
-    },
+    }{% if not forloop.last %},{% endif %}
     {% endfor %}
   ];
 
-  let currentIndex = 0;
+  const COLORS = ['#f26f23','#2d6cdf','#1db954','#a855f7','#e84d4d','#f5a623','#00bcd4'];
+
+  let currentIdx = 0;
   let isRepeat = false;
   let isShuffle = false;
 
-  const player = document.getElementById('audio-player');
-  const nowPlaying = document.getElementById('now-playing');
-  const repeatBtn = document.getElementById('repeat-btn');
-  const shuffleBtn = document.getElementById('shuffle-btn');
+  const audio = new Audio();
+  audio.volume = 0.8;
 
-  // Play song by index
-  function playSong(index) {
-    currentIndex = index;
-    const song = playlist[index];
-    player.src = song.url;
-    player.play();
-    nowPlaying.textContent = '▶ Now Playing: ' + song.title + ' — ' + song.artist;
+  // ---- Waveform ----
+  function buildWaveform() {
+    const wf = document.getElementById('waveform');
+    wf.innerHTML = '';
+    for (let i = 0; i < 80; i++) {
+      const h = 6 + Math.random() * 30;
+      const bar = document.createElement('div');
+      bar.className = 'sc-wf-bar';
+      bar.style.height = h + 'px';
+      bar.dataset.i = i;
+      wf.appendChild(bar);
+    }
+  }
 
-    // Update all card buttons
-    document.querySelectorAll('.song-btn').forEach((btn, i) => {
-      if (i === index) {
-        btn.innerHTML = '<i class="fas fa-pause me-1"></i> Playing';
-        btn.classList.replace('btn-primary', 'btn-success');
+  function updateWaveform(pct) {
+    const bars = document.querySelectorAll('.sc-wf-bar');
+    const filled = Math.floor(pct / 100 * bars.length);
+    const color = COLORS[currentIdx % COLORS.length];
+    bars.forEach((b, i) => {
+      b.style.background = i < filled ? color : '#333';
+    });
+  }
+
+  // ---- Time formatting ----
+  function fmt(secs) {
+    if (isNaN(secs)) return '0:00';
+    const m = Math.floor(secs / 60);
+    const s = Math.floor(secs % 60);
+    return m + ':' + (s < 10 ? '0' : '') + s;
+  }
+
+  // ---- Load track ----
+  function loadTrack(idx) {
+    currentIdx = idx;
+    const song = playlist[idx];
+    const color = COLORS[idx % COLORS.length];
+
+    audio.src = song.url;
+    audio.load();
+
+    document.getElementById('main-title').textContent = song.title;
+    document.getElementById('main-artist').textContent = song.artist;
+    document.getElementById('main-cover').style.background = color;
+    document.getElementById('seek-fill').style.width = '0%';
+    document.getElementById('seek-thumb').style.left = '0%';
+    document.getElementById('seek-input').value = 0;
+    document.getElementById('time-cur').textContent = '0:00';
+    document.getElementById('time-total').textContent = '0:00';
+
+    buildWaveform();
+    updateWaveform(0);
+    highlightRow(idx);
+  }
+
+  // ---- Load and immediately play ----
+  function loadAndPlay(idx) {
+    loadTrack(idx);
+    audio.play();
+    document.getElementById('play-icon').className = 'fas fa-pause';
+  }
+
+  // ---- Play / Pause toggle ----
+  function togglePlay() {
+    if (playlist.length === 0) return;
+
+    if (!audio.src || audio.src === window.location.href) {
+      loadTrack(0);
+      audio.play();
+      document.getElementById('play-icon').className = 'fas fa-pause';
+      return;
+    }
+
+    if (audio.paused) {
+      audio.play();
+      document.getElementById('play-icon').className = 'fas fa-pause';
+    } else {
+      audio.pause();
+      document.getElementById('play-icon').className = 'fas fa-play';
+    }
+  }
+
+  // ---- Prev / Next ----
+  function prevSong() {
+    if (audio.currentTime > 3) {
+      audio.currentTime = 0;
+      return;
+    }
+    let idx = currentIdx - 1;
+    if (idx < 0) idx = playlist.length - 1;
+    loadAndPlay(idx);
+  }
+
+  function nextSong() {
+    let idx;
+    if (isShuffle) {
+      do { idx = Math.floor(Math.random() * playlist.length); }
+      while (playlist.length > 1 && idx === currentIdx);
+    } else {
+      idx = (currentIdx + 1) % playlist.length;
+    }
+    loadAndPlay(idx);
+  }
+
+  // ---- Repeat / Shuffle toggles ----
+  function toggleRepeat() {
+    isRepeat = !isRepeat;
+    audio.loop = isRepeat;
+    document.getElementById('btn-repeat').classList.toggle('active', isRepeat);
+  }
+
+  function toggleShuffle() {
+    isShuffle = !isShuffle;
+    document.getElementById('btn-shuffle').classList.toggle('active', isShuffle);
+  }
+
+  // ---- Highlight active row ----
+  function highlightRow(idx) {
+    document.querySelectorAll('.sc-track-row').forEach((row, i) => {
+      row.classList.toggle('active', i === idx);
+      const num = document.getElementById('num-' + i);
+      if (i === idx) {
+        num.innerHTML = '<i class="fas fa-volume-up" style="font-size:11px;color:#f26f23"></i>';
+        num.classList.add('playing-num');
+        document.getElementById('art-' + i).style.background = COLORS[i % COLORS.length] + '44';
       } else {
-        btn.innerHTML = '<i class="fas fa-play me-1"></i> Play';
-        btn.classList.replace('btn-success', 'btn-primary');
+        num.textContent = i + 1;
+        num.classList.remove('playing-num');
+        document.getElementById('art-' + i).style.background = '#2a2a2a';
       }
     });
   }
 
-  // Previous song
-  function prevSong() {
-    let index = currentIndex - 1;
-    if (index < 0) index = playlist.length - 1;
-    playSong(index);
-  }
-
-  // Next song
-  function nextSong() {
-    let index;
-    if (isShuffle) {
-      index = Math.floor(Math.random() * playlist.length);
-    } else {
-      index = currentIndex + 1;
-      if (index >= playlist.length) index = 0;
-    }
-    playSong(index);
-  }
-
-  // Toggle repeat
-  function toggleRepeat() {
-    isRepeat = !isRepeat;
-    player.loop = isRepeat;
-    repeatBtn.classList.toggle('btn-warning', isRepeat);
-    repeatBtn.classList.toggle('btn-outline-warning', !isRepeat);
-  }
-
-  // Toggle shuffle
-  function toggleShuffle() {
-    isShuffle = !isShuffle;
-    shuffleBtn.classList.toggle('btn-info', isShuffle);
-    shuffleBtn.classList.toggle('btn-outline-info', !isShuffle);
-  }
-
-  // Auto play next when song ends
-  player.addEventListener('ended', function () {
-    if (!isRepeat) {
-      nextSong();
-    }
+  // ---- Audio events ----
+  audio.addEventListener('timeupdate', function () {
+    if (!audio.duration) return;
+    const pct = (audio.currentTime / audio.duration) * 100;
+    document.getElementById('seek-fill').style.width = pct + '%';
+    document.getElementById('seek-thumb').style.left = pct + '%';
+    document.getElementById('seek-input').value = pct;
+    document.getElementById('time-cur').textContent = fmt(audio.currentTime);
+    updateWaveform(pct);
   });
 
-  // Card button click handlers
-  document.querySelectorAll('.song-btn').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      const index = parseInt(this.getAttribute('data-index'));
-      playSong(index);
-    });
+  audio.addEventListener('loadedmetadata', function () {
+    document.getElementById('time-total').textContent = fmt(audio.duration);
   });
+
+  audio.addEventListener('ended', function () {
+    document.getElementById('play-icon').className = 'fas fa-play';
+    if (!isRepeat) nextSong();
+  });
+
+  audio.addEventListener('play', function () {
+    document.getElementById('play-icon').className = 'fas fa-pause';
+  });
+
+  audio.addEventListener('pause', function () {
+    document.getElementById('play-icon').className = 'fas fa-play';
+  });
+
+  // ---- Seek input ----
+  document.getElementById('seek-input').addEventListener('input', function () {
+    if (!audio.duration) return;
+    const pct = parseFloat(this.value);
+    audio.currentTime = (pct / 100) * audio.duration;
+    document.getElementById('seek-fill').style.width = pct + '%';
+    document.getElementById('seek-thumb').style.left = pct + '%';
+    updateWaveform(pct);
+  });
+
+  // ---- Volume input ----
+  document.getElementById('vol-input').addEventListener('input', function () {
+    const v = parseFloat(this.value);
+    audio.volume = v / 100;
+    document.getElementById('vol-fill').style.width = v + '%';
+  });
+
+  // ---- Init ----
+  if (playlist.length > 0) {
+    buildWaveform();
+    highlightRow(0);
+  }
 </script>
+
 {% endblock %}

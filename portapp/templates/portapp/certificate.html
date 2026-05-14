@@ -1,45 +1,258 @@
 {% extends 'base.html' %}
-
 {% load static %}
-{% block title %}
-certificate
-      
-      {% endblock title %}
+{% block title %}Certificates — Puzan Kc{% endblock %}
 
 {% block content %}
-<section class="certificates-section py-5">
-    <div class="container">
-        <div class="section-heading text-center mb-5">
-            <h1 class="fw-bold">My Certificates</h1>
-            <div class="heading-line"></div>
-            <p class="lead mt-3">Professional certifications and courses I've completed.</p>
-        </div>
-        
-        <div class="row g-4">
-            {% if certificates %}
-                {% for certificate in certificates %}
-                    <div class="col-md-6 col-lg-4">
-                        <div class="certificate-card card bg-dark-accent h-100">
-                            <img src="{{certificate.image.url}}" class="card-img-top certificate-image" alt="no image">
-                            <div class="card-body">
-                                <h3 class="card-title h5"></h3>
-                                <h4 class="organization h6 text-primary">{{certificate.title}}</h4>
-                                <p class="date"><i class="far fa-calendar-alt me-2"></i>{{certificate.date_earned}}</p>
-                                <p class="card-text">{{certificate.description}}</p>
-                            </div>
-                        </div>
-                    </div>
-                {% endfor %}
-            {% else %}
-                <div class="col-12 text-center">
-                    <div class="empty-state p-5">
-                        <i class="fas fa-certificate fa-4x mb-3 text-muted"></i>
-                        <h3>No Certificates Yet</h3>
-                        <p>Certificates will be added soon!</p>
-                    </div>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Inter:wght@300;400;500&display=swap');
+
+  :root {
+    --accent: #f26f23;
+    --bg: #0a0a0a;
+    --surface: #111111;
+    --surface2: #181818;
+    --border: #222222;
+    --text: #e8e8e8;
+    --muted: #666666;
+  }
+
+  body { background: var(--bg); color: var(--text); }
+
+  .cert-page {
+    padding: 100px 0;
+    min-height: 90vh;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cert-page::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(242,111,35,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(242,111,35,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+  }
+
+  .section-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-label::before {
+    content: '';
+    display: inline-block;
+    width: 20px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  .page-title {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2.2rem, 5vw, 3.5rem);
+    font-weight: 800;
+    color: #fff;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin: 0 0 12px;
+  }
+
+  .page-sub {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    color: var(--muted);
+    font-weight: 300;
+    max-width: 480px;
+    line-height: 1.7;
+    margin-bottom: 64px;
+  }
+
+  /* Certificate card */
+  .cert-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    height: 100%;
+    transition: border-color 0.25s, transform 0.25s;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .cert-card:hover {
+    border-color: rgba(242,111,35,0.3);
+    transform: translateY(-5px);
+  }
+
+  .cert-img-wrap {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 16/9;
+    background: #0f0f0f;
+  }
+
+  .cert-img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.4s ease;
+    filter: grayscale(20%);
+  }
+
+  .cert-card:hover .cert-img-wrap img {
+    transform: scale(1.04);
+    filter: grayscale(0%);
+  }
+
+  .cert-img-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(10,10,10,0.6) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .cert-body {
+    padding: 22px 24px 24px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .cert-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+
+  .cert-date {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.7rem;
+    color: var(--accent);
+    font-weight: 500;
+    letter-spacing: 0.08em;
+  }
+
+  .cert-dot {
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: #444;
+  }
+
+  .cert-org {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.7rem;
+    color: var(--muted);
+    font-weight: 400;
+  }
+
+  .cert-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #fff;
+    margin: 0 0 8px;
+    line-height: 1.3;
+  }
+
+  .cert-desc {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.82rem;
+    color: #666;
+    line-height: 1.65;
+    margin: 0;
+    font-weight: 300;
+    flex: 1;
+  }
+
+  /* Empty state */
+  .empty-state {
+    text-align: center;
+    padding: 80px 20px;
+    color: var(--muted);
+  }
+
+  .empty-icon {
+    font-size: 3rem;
+    color: #222;
+    display: block;
+    margin-bottom: 16px;
+  }
+
+  .empty-state h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #444;
+    margin-bottom: 8px;
+  }
+
+  .empty-state p {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem;
+    color: #444;
+    font-weight: 300;
+  }
+</style>
+
+<div class="cert-page">
+  <div class="container position-relative">
+    <div class="section-label">Achievements</div>
+    <h1 class="page-title">My Certificates</h1>
+    <p class="page-sub">Professional certifications and courses I've completed — each one a step forward in the craft.</p>
+
+    <div class="row g-4">
+      {% if certificates %}
+        {% for certificate in certificates %}
+        <div class="col-md-6 col-lg-4">
+          <div class="cert-card">
+            <div class="cert-img-wrap">
+              {% if certificate.image %}
+                <img src="{{ certificate.image.url }}" alt="{{ certificate.title }}">
+              {% else %}
+                <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#0f0f0f;">
+                  <i class="fas fa-certificate" style="font-size:3rem;color:#222;"></i>
                 </div>
-            {% endif %}
+              {% endif %}
+              <div class="cert-img-overlay"></div>
+            </div>
+            <div class="cert-body">
+              <div class="cert-meta">
+                <span class="cert-date">{{ certificate.date_earned }}</span>
+                <span class="cert-dot"></span>
+                <span class="cert-org">{{ certificate.organization }}</span>
+              </div>
+              <h3 class="cert-title">{{ certificate.title }}</h3>
+              {% if certificate.description %}
+                <p class="cert-desc">{{ certificate.description }}</p>
+              {% endif %}
+            </div>
+          </div>
         </div>
+        {% endfor %}
+      {% else %}
+        <div class="col-12">
+          <div class="empty-state">
+            <i class="fas fa-certificate empty-icon"></i>
+            <h3>No Certificates Yet</h3>
+            <p>Certificates will appear here once added via the admin panel.</p>
+          </div>
+        </div>
+      {% endif %}
     </div>
-</section>
+  </div>
+</div>
+
 {% endblock %}

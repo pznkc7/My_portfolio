@@ -1,67 +1,218 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %}
-Tools
-      
-      {% endblock title %}  #This is tools page content 
-
-    
+{% block title %}Tools — Puzan Kc{% endblock %}
 
 {% block content %}
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Inter:wght@300;400;500&display=swap');
 
-<section class="tools-section py-5">
-    <div class="container">
-        <div class="section-heading text-center mb-5">
-            <h2 class="fw-bold">Tools & Resources</h2>
-            <div class="heading-line"></div>
+  :root {
+    --accent: #f26f23;
+    --bg: #0a0a0a;
+    --surface: #111111;
+    --surface2: #181818;
+    --border: #222222;
+    --text: #e8e8e8;
+    --muted: #666666;
+  }
+
+  body { background: var(--bg); color: var(--text); }
+
+  .tools-page {
+    padding: 100px 0;
+    min-height: 90vh;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .tools-page::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(242,111,35,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(242,111,35,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+  }
+
+  .section-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-label::before {
+    content: '';
+    display: inline-block;
+    width: 20px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  .page-title {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2.2rem, 5vw, 3.5rem);
+    font-weight: 800;
+    color: #fff;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin: 0 0 12px;
+  }
+
+  .page-sub {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    color: var(--muted);
+    font-weight: 300;
+    max-width: 480px;
+    line-height: 1.7;
+    margin-bottom: 64px;
+  }
+
+  .tool-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 40px 32px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.25s, transform 0.25s;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .tool-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+  }
+
+  .tool-card:hover {
+    border-color: #333;
+    transform: translateY(-5px);
+    color: inherit;
+  }
+
+  .tool-card:hover::before { transform: scaleX(1); }
+
+  .tool-number {
+    font-family: 'Syne', sans-serif;
+    font-size: 3rem;
+    font-weight: 800;
+    color: #1e1e1e;
+    line-height: 1;
+    margin-bottom: 24px;
+    user-select: none;
+  }
+
+  .tool-icon {
+    width: 52px;
+    height: 52px;
+    background: rgba(242,111,35,0.1);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent);
+    font-size: 22px;
+    margin-bottom: 20px;
+  }
+
+  .tool-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #fff;
+    margin: 0 0 10px;
+  }
+
+  .tool-desc {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem;
+    color: #666;
+    line-height: 1.7;
+    margin: 0 0 24px;
+    font-weight: 300;
+    flex: 1;
+  }
+
+  .tool-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--accent);
+    text-decoration: none;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    transition: gap 0.2s;
+  }
+
+  .tool-link:hover { gap: 12px; color: var(--accent); }
+</style>
+
+<div class="tools-page">
+  <div class="container position-relative">
+    <div class="section-label">Explore</div>
+    <h1 class="page-title">Tools &amp; Resources</h1>
+    <p class="page-sub">A curated collection of tools and guides I've put together — from movie picks to developer resources.</p>
+
+    <div class="row g-4">
+      <div class="col-md-6 col-lg-4">
+        <div class="tool-card">
+          <div class="tool-number">01</div>
+          <div class="tool-icon"><i class="fas fa-film"></i></div>
+          <h3 class="tool-title">Movie Watch Guide</h3>
+          <p class="tool-desc">Curated movie recommendations across genres — action, comedy, drama, and more. Find your next watch.</p>
+          <a href="{% url 'movieguide' %}" class="tool-link">
+            Explore Guide <i class="fas fa-arrow-right"></i>
+          </a>
         </div>
-        <div class="row g-4">
-            <div class="col-md-6 col-lg-4">
-                <div class="card bg-dark-accent h-100">
-                    <div class="card-body text-center py-5">
-                        <div class="icon-box mb-4">
-                            <i class="fas fa-film fa-3x text-primary"></i>
-                        </div>
-                        <h3 class="card-title h4">Movie Watch Guide</h3>
-                        <p class="card-text mb-4">Discover curated movie recommendations and watch guides for all genres.</p>
-                        <a href="{% url "movieguide" %}" class="btn btn-primary btn-sm">
-                            <i class="fas fa-arrow-right me-2"></i>View Guide
-                        </a>
-                    </div>
-                   
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-4">
-                <div class="card bg-dark-accent h-100">
-                    <div class="card-body text-center py-5">
-                        <div class="icon-box mb-4">
-                            <i class="fas fa-globe fa-3x text-primary"></i>
-                        </div>
-                        <h3 class="card-title h4">Useful Sites</h3>
-                        <p class="card-text mb-4">Explore a collection of useful websites for developers and designers.</p>
-                        <a href="{% url "usefulsites" %}" class="btn btn-primary btn-sm">
-                            <i class="fas fa-arrow-right me-2"></i>View Sites
-                        </a>
-                    </div>
-                   
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-4">
-                <div class="card bg-dark-accent h-100">
-                    <div class="card-body text-center py-5">
-                        <div class="icon-box mb-4">
-                            <i class="fas fa-music fa-3x text-primary"></i>
-                        </div>
-                        <h3 class="card-title h4">Music Player</h3>
-                        <p class="card-text mb-4">Listen to a curated playlist while you browse.</p>
-                        <a href="{% url 'music_player' %}" class="btn btn-primary btn-sm">
-                            <i class="fas fa-play me-2"></i>Play Music
-                        </a>
-                    </div>
-                </div>
-            </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4">
+        <div class="tool-card">
+          <div class="tool-number">02</div>
+          <div class="tool-icon"><i class="fas fa-globe"></i></div>
+          <h3 class="tool-title">Useful Sites</h3>
+          <p class="tool-desc">A handpicked collection of websites every developer should bookmark — docs, tools, and references.</p>
+          <a href="{% url 'usefulsites' %}" class="tool-link">
+            Browse Sites <i class="fas fa-arrow-right"></i>
+          </a>
         </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4">
+        <div class="tool-card">
+          <div class="tool-number">03</div>
+          <div class="tool-icon"><i class="fas fa-music"></i></div>
+          <h3 class="tool-title">Music Player</h3>
+          <p class="tool-desc">Listen to a curated playlist while you browse. Skip, shuffle, and repeat — full controls included.</p>
+          <a href="{% url 'music_player' %}" class="tool-link">
+            Play Music <i class="fas fa-arrow-right"></i>
+          </a>
+        </div>
+      </div>
     </div>
-</section>
+  </div>
+</div>
 
 {% endblock content %}

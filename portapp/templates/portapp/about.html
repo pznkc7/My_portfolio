@@ -1,58 +1,289 @@
 {% extends 'base.html' %}
-
 {% load static %}
 
-{% block title %}
-About me
-
-{% endblock title %}
-
+{% block title %}About — Puzan Kc{% endblock %}
 
 {% block content %}
-<section class="about-section py-5">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Inter:wght@300;400;500&display=swap');
+
+  :root {
+    --accent: #f26f23;
+    --bg: #0a0a0a;
+    --surface: #111111;
+    --surface2: #181818;
+    --border: #222222;
+    --text: #e8e8e8;
+    --muted: #666666;
+  }
+
+  body { background: var(--bg); color: var(--text); }
+
+  .about-hero {
+    padding: 100px 0 80px;
+    background: var(--bg);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .about-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(242,111,35,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(242,111,35,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+  }
+
+  .section-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-label::before {
+    content: '';
+    display: inline-block;
+    width: 20px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  .page-title {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    font-weight: 800;
+    color: #fff;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin: 0 0 24px;
+  }
+
+  .page-title span { color: var(--accent); }
+
+  .about-lead {
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    color: #888;
+    line-height: 1.85;
+    font-weight: 300;
+    max-width: 520px;
+  }
+
+  /* Image column */
+  .about-img-wrap {
+    position: relative;
+  }
+
+  .about-img {
+    width: 100%;
+    max-width: 420px;
+    aspect-ratio: 4/5;
+    object-fit: cover;
+    border-radius: 12px;
+    display: block;
+    filter: grayscale(15%);
+    transition: filter 0.3s;
+  }
+
+  .about-img:hover { filter: grayscale(0%); }
+
+  .about-img-frame {
+    position: absolute;
+    bottom: -12px;
+    right: -12px;
+    width: 100%;
+    max-width: 420px;
+    aspect-ratio: 4/5;
+    border: 1px solid rgba(242,111,35,0.25);
+    border-radius: 12px;
+    pointer-events: none;
+  }
+
+  .exp-badge {
+    position: absolute;
+    top: 24px;
+    left: -16px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 18px;
+    text-align: center;
+  }
+
+  .exp-badge .num {
+    font-family: 'Syne', sans-serif;
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--accent);
+    line-height: 1;
+    display: block;
+  }
+
+  .exp-badge .lbl {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.68rem;
+    color: var(--muted);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    display: block;
+    margin-top: 4px;
+  }
+
+  /* Values / info section */
+  .info-section {
+    padding: 100px 0;
+    background: var(--surface);
+  }
+
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.15;
+    margin: 0 0 48px;
+    letter-spacing: -0.02em;
+  }
+
+  .info-item {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 36px;
+  }
+
+  .info-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.08em;
+    min-width: 28px;
+    padding-top: 3px;
+  }
+
+  .info-body h4 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #fff;
+    margin: 0 0 6px;
+  }
+
+  .info-body p {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem;
+    color: #666;
+    line-height: 1.7;
+    margin: 0;
+    font-weight: 300;
+  }
+
+  /* Skills bar */
+  .skill-bar-wrap { margin-bottom: 24px; }
+
+  .skill-bar-top {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+
+  .skill-bar-name {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8rem;
+    color: #ccc;
+    font-weight: 500;
+  }
+
+  .skill-bar-pct {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.75rem;
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  .skill-bar-track {
+    height: 3px;
+    background: #222;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .skill-bar-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 2px;
+    width: 0%;
+    transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* CTA */
+  .about-cta {
+    padding: 80px 0;
+    background: var(--bg);
+    text-align: center;
+  }
+
+  .btn-primary-custom {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    padding: 13px 30px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background 0.2s, transform 0.15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .btn-primary-custom:hover {
+    background: #d95f1a;
+    color: #fff;
+    transform: translateY(-1px);
+  }
+</style>
+
+<!-- ── HERO ── -->
+<section class="about-hero">
   <div class="container">
-    <div class="section-heading text-center mb-5">
-      <h1 class="fw-bold">About Me</h1>
-      <div class="heading-line"></div>
-    </div>
-
-    <div class="row align-items-center mb-5">
-      <div class="col-lg-6 mb-4 mb-lg-0 text-center">
-        <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
-          <div class="carousel-inner">
-            <div class="carousel-item active">
-              <img class="d-block w-100 rounded" src=" {% static 'images/my2.jpeg' %} " alt="First slide">
-            </div>
-            <div class="carousel-item">
-              <img class="d-block w-100 rounded" src="{% static 'images/my2.jpeg' %}" alt="Second slide">
-            </div>
-
-          </div>
-          <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-          </a>
-          <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
+    <div class="row align-items-center g-5">
+      <div class="col-lg-6 order-2 order-lg-1">
+        <div class="section-label">About me</div>
+        <h1 class="page-title">The developer<br>behind the <span>code.</span></h1>
+        <p class="about-lead">
+          I'm Puzan Kc — a Django developer based in Nepal, dedicated to crafting the engine room of great websites. I build secure, fast, and scalable back-end systems with Python and Django, so the front-end can shine and users can enjoy a flawless experience.
+        </p>
+        <p class="about-lead mt-3">Always eager to take on new challenges and collaborate on exciting projects. <em style="color:#aaa; font-style:normal;">"Let's connect and build something amazing together."</em>
+        </p>
+        <div class="mt-4">
+          <a href="{% url 'contact' %}" class="btn-primary-custom">
+            <i class="fas fa-paper-plane"></i> Contact Me
           </a>
         </div>
       </div>
 
-      <div class="col-lg-6">
-        <div class="about-content text-center text-lg-start">
-          <h2 class="mb-3">Who Am I?</h2>
-          <p class=" lead">I am a Django developer dedicated to crafting the engine room
-            of great websites. I build secure, fast, and scalable back-end systems with Python and Django, so the
-            front-end can shine and users can enjoy a flawless experience.
-            I'm always eager to take on new challenges and collaborate on exciting projects.
-
-            <br>"Let's connect and build something amazing together."
-
-          </p>
-
-          <div class="mt-4">
-            <a href="{% url 'contact'%}" class="btn btn-primary">Contact Me</a>
+      <div class="col-lg-6 order-1 order-lg-2 text-center">
+        <div class="about-img-wrap d-inline-block" style="position:relative; max-width:360px;">
+          <img src="{% static 'images/IMG_20250316_165136640_HDR_AE.jpg' %}" alt="Puzan Kc" class="about-img">
+          <div class="about-img-frame"></div>
+          <div class="exp-badge">
+            <span class="num">2+</span>
+            <span class="lbl">Years exp.</span>
           </div>
         </div>
       </div>
@@ -60,12 +291,123 @@ About me
   </div>
 </section>
 
+<!-- ── INFO + SKILLS ── -->
+<section class="info-section">
+  <div class="container">
+    <div class="row g-5">
+
+      <!-- Left: values -->
+      <div class="col-lg-6">
+        <h2 class="section-title">My approach<br>to building.</h2>
+
+        <div class="info-item">
+          <div class="info-num">01</div>
+          <div class="info-body">
+            <h4>Clean Architecture First</h4>
+            <p>I start every project by thinking about structure — models, URLs, views — before a single template is written. Good bones make everything easier to maintain.</p>
+          </div>
+        </div>
+
+        <div class="info-item">
+          <div class="info-num">02</div>
+          <div class="info-body">
+            <h4>Security by Default</h4>
+            <p>Django's security features aren't extras — they're defaults. CSRF protection, safe query handling, and proper auth are non-negotiable from day one.</p>
+          </div>
+        </div>
+
+        <div class="info-item">
+          <div class="info-num">03</div>
+          <div class="info-body">
+            <h4>User Experience Matters</h4>
+            <p>Even backend-heavy projects deserve thoughtful front-ends. I care about how things feel for the person clicking the button.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: skills -->
+      <div class="col-lg-6">
+        <h2 class="section-title">Technical<br>proficiency.</h2>
+
+        <div class="skill-bar-wrap">
+          <div class="skill-bar-top">
+            <span class="skill-bar-name">Python / Django</span>
+            <span class="skill-bar-pct">85%</span>
+          </div>
+          <div class="skill-bar-track">
+            <div class="skill-bar-fill" data-width="85"></div>
+          </div>
+        </div>
+
+        <div class="skill-bar-wrap">
+          <div class="skill-bar-top">
+            <span class="skill-bar-name">HTML / CSS / Bootstrap</span>
+            <span class="skill-bar-pct">80%</span>
+          </div>
+          <div class="skill-bar-track">
+            <div class="skill-bar-fill" data-width="80"></div>
+          </div>
+        </div>
+
+        <div class="skill-bar-wrap">
+          <div class="skill-bar-top">
+            <span class="skill-bar-name">Database (SQLite / PostgreSQL)</span>
+            <span class="skill-bar-pct">75%</span>
+          </div>
+          <div class="skill-bar-track">
+            <div class="skill-bar-fill" data-width="75"></div>
+          </div>
+        </div>
+
+        <div class="skill-bar-wrap">
+          <div class="skill-bar-top">
+            <span class="skill-bar-name">JavaScript</span>
+            <span class="skill-bar-pct">65%</span>
+          </div>
+          <div class="skill-bar-track">
+            <div class="skill-bar-fill" data-width="65"></div>
+          </div>
+        </div>
+
+        <div class="skill-bar-wrap">
+          <div class="skill-bar-top">
+            <span class="skill-bar-name">Git / GitHub</span>
+            <span class="skill-bar-pct">78%</span>
+          </div>
+          <div class="skill-bar-track">
+            <div class="skill-bar-fill" data-width="78"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA ── -->
+<section class="about-cta">
+  <div class="container">
+    <div class="section-label justify-content-center">Ready to collaborate</div>
+    <h2 style="font-family:'Syne',sans-serif;font-size:clamp(1.8rem,4vw,2.8rem);font-weight:700;color:#fff;margin:8px 0 16px;letter-spacing:-0.02em;">Let's build something<br>great together.</h2>
+    <p style="font-family:'Inter',sans-serif;color:var(--muted);font-size:0.9rem;margin-bottom:28px;font-weight:300;">Drop me a message — I respond within 24 hours.</p>
+    <a href="{% url 'contact' %}" class="btn-primary-custom">
+      <i class="fas fa-envelope"></i> Send a Message
+    </a>
+  </div>
+</section>
+
 <script>
-  document.addEventListener("DOMContentLoaded", function () {
-    var myCarousel = new bootstrap.Carousel(document.getElementById("carouselExampleControls"), {
-      interval: 3000,
-      ride: "carousel"
+  // Animate skill bars when they scroll into view
+  const fills = document.querySelectorAll('.skill-bar-fill');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.width = e.target.dataset.width + '%';
+        observer.unobserve(e.target);
+      }
     });
-  });
+  }, { threshold: 0.3 });
+  fills.forEach(f => observer.observe(f));
 </script>
+
 {% endblock %}

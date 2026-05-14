@@ -1,100 +1,591 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %}
-Home
-      
-      {% endblock title %}
+{% block title %}Puzan Kc — Django Developer{% endblock %}
+
 {% block content %}
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Inter:wght@300;400;500&display=swap');
 
-<section class="hero-section py-5">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-6">
-                <h1 class="display-4 fw-bold">Hello, I'm <span class="text-primary">Puzan Kc</span></h1>
-                <p class="lead">Django Developer</p>
-                <p class="mb-4">I build amazing web applications with Django and modern front-end technologies.</p>
-                <div class="d-flex">
-                   
-                  <a href="{%url 'certificate' %}" class="btn btn-primary me-3">View My Certificates</a>
-                  <a href="{%url 'contact' %}" class="btn btn-primary me-3">Contact me</a>
-                
-                  
-                
-                </div>
-            </div>
-            <div class="col-lg-6 text-center mt-4 mt-lg-0">
-                <div class="profile-image-container">
-                    <img src="{% static 'images/profile.jpg' %}" alt="Profile Image" class="img-fluid rounded-circle profile-image" style="width: 270px; height: 270px; object-fit: cover;">
-                </div>
-            </div>
+  /* ── Global page vars ── */
+  :root {
+    --accent: #f26f23;
+    --accent2: #ff9a56;
+    --bg: #0a0a0a;
+    --surface: #111111;
+    --surface2: #181818;
+    --border: #222222;
+    --text: #e8e8e8;
+    --muted: #666666;
+  }
+
+  body { background: var(--bg); color: var(--text); }
+
+  /* ── Hero ── */
+  .hero {
+    min-height: 92vh;
+    display: flex;
+    align-items: center;
+    padding: 80px 0 60px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Subtle grid background */
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(242,111,35,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(242,111,35,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+  }
+
+  /* Radial glow behind profile */
+  .hero::after {
+    content: '';
+    position: absolute;
+    right: 10%;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 420px;
+    height: 420px;
+    background: radial-gradient(circle, rgba(242,111,35,0.1) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-eyebrow {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .hero-eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 28px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  .hero-name {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(3rem, 7vw, 5.5rem);
+    font-weight: 800;
+    line-height: 1.0;
+    color: #fff;
+    margin: 0 0 8px;
+    letter-spacing: -0.02em;
+  }
+
+  .hero-name .accent-word {
+    color: var(--accent);
+  }
+
+  .hero-role {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(1rem, 2.5vw, 1.4rem);
+    font-weight: 500;
+    color: var(--muted);
+    margin: 0 0 24px;
+    letter-spacing: 0.02em;
+  }
+
+  .hero-desc {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.95rem;
+    color: #888;
+    line-height: 1.8;
+    max-width: 420px;
+    margin-bottom: 36px;
+    font-weight: 300;
+  }
+
+  .hero-btns {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary-custom {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    padding: 12px 28px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background 0.2s, transform 0.15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .btn-primary-custom:hover {
+    background: #d95f1a;
+    color: #fff;
+    transform: translateY(-1px);
+  }
+
+  .btn-ghost-custom {
+    background: transparent;
+    color: #888;
+    border: 1px solid #333;
+    padding: 12px 28px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: border-color 0.2s, color 0.2s, transform 0.15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .btn-ghost-custom:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    transform: translateY(-1px);
+  }
+
+  /* Profile image */
+  .profile-wrap {
+    position: relative;
+    display: inline-block;
+  }
+
+  .profile-ring {
+    position: absolute;
+    inset: -8px;
+    border-radius: 50%;
+    border: 1px solid rgba(242,111,35,0.3);
+    animation: spin-slow 12s linear infinite;
+  }
+
+  .profile-ring::before {
+    content: '';
+    position: absolute;
+    top: -3px;
+    left: 50%;
+    width: 6px;
+    height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    transform: translateX(-50%);
+  }
+
+  @keyframes spin-slow {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+
+  .profile-img {
+    width: 280px;
+    height: 280px;
+    object-fit: cover;
+    border-radius: 50%;
+    display: block;
+    filter: grayscale(20%);
+    transition: filter 0.3s;
+  }
+
+  .profile-img:hover { filter: grayscale(0%); }
+
+  /* Status badge */
+  .status-badge {
+    position: absolute;
+    bottom: 12px;
+    right: -8px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.72rem;
+    color: #4ade80;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+  }
+
+  .status-dot {
+    width: 6px;
+    height: 6px;
+    background: #4ade80;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  /* Stats row */
+  .stats-row {
+    display: flex;
+    gap: 32px;
+    margin-top: 40px;
+    padding-top: 32px;
+    border-top: 1px solid var(--border);
+  }
+
+  .stat-item { text-align: left; }
+
+  .stat-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1;
+  }
+
+  .stat-num span { color: var(--accent); }
+
+  .stat-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.72rem;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  /* ── Section shared styles ── */
+  .port-section {
+    padding: 100px 0;
+    background: var(--bg);
+    position: relative;
+  }
+
+  .port-section.alt { background: var(--surface); }
+
+  .section-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-label::before {
+    content: '';
+    display: inline-block;
+    width: 20px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.1;
+    margin: 0 0 16px;
+    letter-spacing: -0.02em;
+  }
+
+  .section-sub {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    color: var(--muted);
+    max-width: 480px;
+    line-height: 1.7;
+    font-weight: 300;
+  }
+
+  /* ── Skill cards ── */
+  .skill-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 32px 28px;
+    height: 100%;
+    transition: border-color 0.25s, transform 0.25s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .skill-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+  }
+
+  .skill-card:hover {
+    border-color: #333;
+    transform: translateY(-4px);
+  }
+
+  .skill-card:hover::before { transform: scaleX(1); }
+
+  .skill-icon {
+    width: 48px;
+    height: 48px;
+    background: rgba(242,111,35,0.1);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    font-size: 20px;
+    color: var(--accent);
+  }
+
+  .skill-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #fff;
+    margin: 0 0 10px;
+  }
+
+  .skill-desc {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem;
+    color: #666;
+    line-height: 1.7;
+    margin: 0;
+    font-weight: 300;
+  }
+
+  /* Tech stack pills */
+  .tech-pill {
+    display: inline-block;
+    background: rgba(242,111,35,0.08);
+    border: 1px solid rgba(242,111,35,0.2);
+    color: var(--accent);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin: 4px 3px;
+  }
+
+  /* ── CTA section ── */
+  .cta-section {
+    padding: 100px 0;
+    background: var(--surface);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-section::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px;
+    height: 300px;
+    background: radial-gradient(ellipse, rgba(242,111,35,0.07) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .cta-title {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 800;
+    color: #fff;
+    line-height: 1.1;
+    margin-bottom: 20px;
+    letter-spacing: -0.02em;
+  }
+
+  .cta-title em {
+    font-style: normal;
+    color: var(--accent);
+  }
+
+  .cta-sub {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    color: var(--muted);
+    margin-bottom: 36px;
+    font-weight: 300;
+  }
+
+  /* Scroll indicator */
+  .scroll-hint {
+    position: absolute;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    color: #444;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  .scroll-hint::after {
+    content: '';
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, #444, transparent);
+    animation: scroll-drop 1.8s ease-in-out infinite;
+  }
+
+  @keyframes scroll-drop {
+    0%, 100% { opacity: 0; transform: scaleY(0); transform-origin: top; }
+    50% { opacity: 1; transform: scaleY(1); }
+  }
+</style>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="container position-relative">
+    <div class="row align-items-center">
+      <div class="col-lg-6">
+        <div class="hero-eyebrow">Available for work</div>
+        <h1 class="hero-name">
+          Puzan<br><span class="accent-word">Kc</span>
+        </h1>
+        <p class="hero-role">Django Developer &amp; Backend Engineer</p>
+        <p class="hero-desc">I craft secure, scalable web systems with Python &amp; Django — so the front-end can shine and users enjoy a flawless experience.</p>
+        <div class="hero-btns">
+          <a href="{% url 'certificate' %}" class="btn-primary-custom">
+            <i class="fas fa-award"></i> View Certificates
+          </a>
+          <a href="{% url 'contact' %}" class="btn-ghost-custom">
+            <i class="fas fa-paper-plane"></i> Contact Me
+          </a>
         </div>
+
+        <div class="stats-row">
+          <div class="stat-item">
+            <div class="stat-num">2<span>+</span></div>
+            <div class="stat-label">Years Coding</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num">10<span>+</span></div>
+            <div class="stat-label">Projects Built</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num">5<span>+</span></div>
+            <div class="stat-label">Certificates</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-6 text-center mt-5 mt-lg-0">
+        <div class="profile-wrap mx-auto" style="width: fit-content;">
+          <div class="profile-ring"></div>
+          <img src="{% static 'images/profile.png' %}" alt="Puzan Kc" class="profile-img">
+          <div class="status-badge">
+            <span class="status-dot"></span> Open to opportunities
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
+  <div class="scroll-hint">Scroll</div>
 </section>
 
-<section class="featured-section py-5">
-    <div class="container">
-        <div class="section-heading text-center mb-5">
-            <h2 class="fw-bold">Featured Skills</h2>
-            <div class="heading-line"></div>
-        </div>
-        <div class="row g-4">
-            <div class="col-md-4">
-                <div class="card bg-dark-accent h-100">
-                    <div class="card-body text-center py-4">
-                        <div class="icon-box mb-4">
-                            <i class="fas fa-code fa-3x text-primary"></i>
-                        </div>
-                        <h3 class="card-title h4">Web Development</h3>
-                        <p class="card-text">Building responsive and scalable web applications using Django, HTML, CSS, and JavaScript.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card bg-dark-accent h-100">
-                    <div class="card-body text-center py-4">
-                        <div class="icon-box mb-4">
-                            <i class="fas fa-database fa-3x text-primary"></i>
-                        </div>
-                        <h3 class="card-title h4">Database Design</h3>
-                        <p class="card-text">Creating efficient database schemas and optimizing queries for better performance.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card bg-dark-accent h-100">
-                    <div class="card-body text-center py-4">
-                        <div class="icon-box mb-4">
-                            <i class="fas fa-mobile-alt fa-3x text-primary"></i>
-                        </div>
-                        <h3 class="card-title h4">Responsive Design</h3>
-                        <p class="card-text">Creating websites that work seamlessly across all devices and screen sizes.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="text-center mt-4">
-            <a href="{% url 'tools' %}" class="btn btn-sm btn-outline-primary">
-                <i class="fas fa-chevron-down me-2"></i> QUICK TOOLS
-            </a>
-        </div>
+<!-- ── SKILLS ── -->
+<section class="port-section alt">
+  <div class="container">
+    <div class="row mb-5">
+      <div class="col-lg-6">
+        <div class="section-label">What I do</div>
+        <h2 class="section-title">Skills &amp; Expertise</h2>
+        <p class="section-sub">From database architecture to pixel-perfect interfaces — I cover the full stack with a Python-first mindset.</p>
+      </div>
     </div>
+
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="skill-card">
+          <div class="skill-icon"><i class="fas fa-server"></i></div>
+          <h3 class="skill-title">Backend Development</h3>
+          <p class="skill-desc">Building robust APIs and server-side logic with Django, Django REST Framework, and Python.</p>
+          <div class="mt-3">
+            <span class="tech-pill">Python</span>
+            <span class="tech-pill">Django</span>
+            <span class="tech-pill">DRF</span>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="skill-card">
+          <div class="skill-icon"><i class="fas fa-database"></i></div>
+          <h3 class="skill-title">Database Design</h3>
+          <p class="skill-desc">Designing efficient schemas, optimising queries, and managing data with PostgreSQL and SQLite.</p>
+          <div class="mt-3">
+            <span class="tech-pill">PostgreSQL</span>
+            <span class="tech-pill">SQLite</span>
+            <span class="tech-pill">ORM</span>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="skill-card">
+          <div class="skill-icon"><i class="fas fa-layer-group"></i></div>
+          <h3 class="skill-title">Frontend Integration</h3>
+          <p class="skill-desc">Delivering responsive interfaces with HTML, CSS, Bootstrap and JavaScript that work on every device.</p>
+          <div class="mt-3">
+            <span class="tech-pill">HTML/CSS</span>
+            <span class="tech-pill">Bootstrap</span>
+            <span class="tech-pill">JavaScript</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center mt-5">
+      <a href="{% url 'tools' %}" class="btn-ghost-custom">
+        <i class="fas fa-tools"></i> View My Tools
+      </a>
+    </div>
+  </div>
 </section>
 
-<section class="cta-section py-5">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-10">
-                <div class="cta-card text-center p-5">
-                    <h2 class="mb-4">Interesting in working together?</h2>
-                    <p class="lead mb-4">I'm always open to discussing product design work or partnership opportunities.</p>
-
-           
-                    <a href="{% url 'contact' %}" class="btn btn-lg btn-primary">Get in Touch</a>
-                </div>
-            </div>
-        </div>
-    </div>
+<!-- ── CTA ── -->
+<section class="cta-section">
+  <div class="container position-relative">
+    <p class="section-label justify-content-center">Let's work together</p>
+    <h2 class="cta-title">Got a project in<br>mind? <em>Let's talk.</em></h2>
+    <p class="cta-sub">I'm always open to exciting collaborations and new opportunities.</p>
+    <a href="{% url 'contact' %}" class="btn-primary-custom" style="font-size:0.88rem; padding:14px 36px;">
+      <i class="fas fa-paper-plane"></i> Get in Touch
+    </a>
+  </div>
 </section>
 
-  
 {% endblock content %}

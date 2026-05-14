@@ -1,52 +1,245 @@
-{% extends "base.html" %} 
+{% extends "base.html" %}
 {% load static %}
-{% block title %}
-Movie Guide
-{% endblock title %}
+{% block title %}Movie Guide — Puzan Kc{% endblock %}
 
 {% block content %}
-<section class="movie-guide-section py-5">
-    <div class="container">
-        <div class="section-heading text-center mb-5">
-            <h2 class="fw-bold">Movie Watch Guide</h2>
-            <div class="heading-line"></div>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Inter:wght@300;400;500&display=swap');
+
+  :root {
+    --accent: #f26f23;
+    --bg: #0a0a0a;
+    --surface: #111111;
+    --surface2: #181818;
+    --border: #222222;
+    --text: #e8e8e8;
+    --muted: #666666;
+  }
+
+  body { background: var(--bg); color: var(--text); }
+
+  .movie-page { padding: 100px 0; min-height: 90vh; }
+
+  .section-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-label::before {
+    content: '';
+    display: inline-block;
+    width: 20px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  .page-title {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2.2rem, 5vw, 3.5rem);
+    font-weight: 800;
+    color: #fff;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin: 0 0 12px;
+  }
+
+  .page-sub {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    color: var(--muted);
+    font-weight: 300;
+    max-width: 480px;
+    line-height: 1.7;
+    margin-bottom: 64px;
+  }
+
+  .movie-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 32px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    transition: border-color 0.25s, transform 0.25s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .movie-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+  }
+
+  .movie-card:hover {
+    border-color: #333;
+    transform: translateY(-4px);
+  }
+
+  .movie-card:hover::before { transform: scaleX(1); }
+
+  .genre-tag {
+    display: inline-block;
+    background: rgba(242,111,35,0.1);
+    border: 1px solid rgba(242,111,35,0.2);
+    color: var(--accent);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 20px;
+    margin-bottom: 16px;
+    display: inline-block;
+  }
+
+  .movie-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #fff;
+    margin: 0 0 10px;
+  }
+
+  .movie-desc {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.83rem;
+    color: #666;
+    line-height: 1.65;
+    margin: 0 0 24px;
+    font-weight: 300;
+    flex: 1;
+  }
+
+  .movie-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--accent);
+    text-decoration: none;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    transition: gap 0.2s;
+  }
+
+  .movie-link:hover { gap: 12px; color: var(--accent); }
+
+  .back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+    margin-top: 48px;
+  }
+
+  .back-btn:hover { color: var(--accent); }
+</style>
+
+<div class="movie-page">
+  <div class="container">
+    <div class="section-label">Entertainment</div>
+    <h1 class="page-title">Movie Watch<br>Guide</h1>
+    <p class="page-sub">Curated picks across genres — because good movies are as important as good code.</p>
+
+    <div class="row g-4">
+
+      <div class="col-md-6 col-lg-4">
+        <div class="movie-card">
+          <span class="genre-tag">Action &amp; Adventure</span>
+          <h3 class="movie-title">High-Octane Picks</h3>
+          <p class="movie-desc">Thrilling action and adventure movies that keep you on the edge of your seat from start to finish. Explosions, chases, heroes.</p>
+          <a href="https://www.imdb.com/list/ls055386972/" target="_blank" class="movie-link">
+            View on IMDb <i class="fas fa-arrow-right"></i>
+          </a>
         </div>
-        <div class="row g-4">
-            <div class="col-md-6 col-lg-4">
-                <div class="card bg-dark-accent h-100">
-                    <div class="card-body text-center py-5">
-                        <h3 class="card-title h4">Action & Adventure</h3>
-                        <p class="card-text mb-4">Explore thrilling action and adventure movies that will keep you on the edge of your seat.</p>
-                        <a href="https://www.imdb.com/list/ls055386972/" class="btn btn-primary btn-sm" target="_blank">
-                            <i class="fas fa-arrow-right me-2"></i>View Guide
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-4">                
-                <div class="card bg-dark-accent h-100">
-                    <div class="card-body text-center py-5">
-                        <h3 class="card-title h4">Comedy</h3>
-                        <p class="card-text mb-4">Discover a collection of hilarious comedy movies that will have you laughing out loud.</p>
-                        <a href="https://www.imdb.com/list/ls055386972/" class="btn btn-primary btn-sm" target="_blank">
-                            <i class="fas fa-arrow-right me-2"></i>View Guide
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-4">
-                <div class="card bg-dark-accent h-100">
-                    <div class="card-body text-center py-5">
-                        <h3 class="card-title      h4">Drama</h3>           
-                        <p class="card-text mb-4">Immerse yourself in compelling dramas that explore the depths of human emotion and experience.</p>
-                        <a href="https://www.imdb.com/list/ls055386972/" class="btn btn-primary btn-sm" target="_blank">
-                            <i class="fas fa-arrow-right me-2"></i>View Guide
-                        </a>
-                    </div>
-                </div>
-            </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4">
+        <div class="movie-card">
+          <span class="genre-tag">Comedy</span>
+          <h3 class="movie-title">Laugh Out Loud</h3>
+          <p class="movie-desc">A collection of hilarious comedies guaranteed to lift your mood after a long day of debugging and deployment headaches.</p>
+          <a href="https://www.imdb.com/list/ls055386972/" target="_blank" class="movie-link">
+            View on IMDb <i class="fas fa-arrow-right"></i>
+          </a>
         </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4">
+        <div class="movie-card">
+          <span class="genre-tag">Drama</span>
+          <h3 class="movie-title">Deep &amp; Moving</h3>
+          <p class="movie-desc">Compelling dramas that explore the depths of human emotion. Stories that stay with you long after the credits roll.</p>
+          <a href="https://www.imdb.com/list/ls055386972/" target="_blank" class="movie-link">
+            View on IMDb <i class="fas fa-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4">
+        <div class="movie-card">
+          <span class="genre-tag">Sci-Fi</span>
+          <h3 class="movie-title">Mind-Bending Worlds</h3>
+          <p class="movie-desc">Science fiction that challenges reality and expands your imagination — perfect viewing for a developer who loves problem-solving.</p>
+          <a href="https://www.imdb.com/chart/top/" target="_blank" class="movie-link">
+            Browse Top 250 <i class="fas fa-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4">
+        <div class="movie-card">
+          <span class="genre-tag">Thriller</span>
+          <h3 class="movie-title">Edge of Your Seat</h3>
+          <p class="movie-desc">Tense, gripping thrillers with twists you never saw coming. Great for when you want your brain working even while relaxing.</p>
+          <a href="https://www.imdb.com/list/ls055386972/" target="_blank" class="movie-link">
+            View on IMDb <i class="fas fa-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4">
+        <div class="movie-card">
+          <span class="genre-tag">Documentary</span>
+          <h3 class="movie-title">Learn While Watching</h3>
+          <p class="movie-desc">Fascinating documentaries on tech, business, nature, and humanity. Educational entertainment for the curious developer.</p>
+          <a href="https://www.imdb.com/chart/top/" target="_blank" class="movie-link">
+            Browse IMDb <i class="fas fa-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+
     </div>
-</section>
+
+    <a href="{% url 'tools' %}" class="back-btn">
+      <i class="fas fa-arrow-left"></i> Back to Tools
+    </a>
+  </div>
+</div>
 
 {% endblock content %}

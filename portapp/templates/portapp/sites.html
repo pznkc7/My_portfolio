@@ -1,76 +1,228 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %}
-Useful Sites
-{% endblock title %}    
+{% block title %}Useful Sites — Puzan Kc{% endblock %}
 
 {% block content %}
-<section class="useful-sites-section py-5">
-    <div class="container">
-        <div class="section-heading text-center mb-5">
-            <h2 class="fw-bold">Useful Sites for Developers</h2>
-            <div class="heading-line"></div>
-        </div>
-        <div class="row g-4">
-            <div class="col-md-6 col-lg-4">
-                <div class="card bg-dark-accent h-100">
-                    <div class="card-body text-center py-5">
-                        <h3 class="card-title h4">Stack Overflow</h3>
-                        <p class="card-text mb-4">A popular Q&A site for developers to ask and answer programming questions.</p>
-                        <a href="https://stackoverflow.com/" class="btn btn-primary btn-sm" target="_blank">
-                            <i class="fas fa-arrow-right me-2"></i>Visit Site
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-4">
-                <div class="card bg-dark-accent h-100">
-                    <div class="card-body text-center py-5">
-                        <h3 class="card-title h4">GitHub</h3>
-                        <p class="card-text mb-4">A platform for hosting and collaborating on code repositories.</p>
-                        <a href="https://github.com/" class="btn btn-primary btn-sm" target="_blank">
-                            <i class="fas fa-arrow-right me-2"></i>Visit Site
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-4">
-                <div class="card bg-dark-accent h-100">
-                    <div class="card-body text-center py-5">
-                        <h3 class="card-title h4">MDN Web Docs</h3>
-                        <p class="card-text mb-4">Comprehensive documentation and resources for web developers.</p>
-                        <a href="https://developer.mozilla.org/" class="btn btn-primary btn-sm" target="_blank">
-                            <i class="fas fa-arrow-right me-2"></i>Visit Site
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="text-center mt-4">
-            <a href="{% url 'tools' %}" class="btn btn-sm btn-outline-primary">
-                <i class="fas fa-chevron-down me-2"></i> QUICK TOOLS
-            </a>
-        </div>
-    </div>
-</section>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Inter:wght@300;400;500&display=swap');
 
-<section class="cta-section py-5">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-10">
-                <div class="cta-card text-center p-5">
-                    <h2 class="fw-bold mb-4">Explore More Resources</h2>
-                    <p class="mb-4">Check out our movie watch guide and other useful tools to enhance your development journey.</p>
-                    <a href="{% url 'movieguide' %}" class="btn btn-primary btn-lg">
-                        <i class="fas fa-film me-2"></i> Movie Watch Guide
-                    </a>
-                    <a href="{% url 'tools' %}" class="btn btn-secondary btn-lg ms-3">
-                        <i class="fas fa-tools me-2"></i> More Tools
-                    </a>
-                </div>
-            </div>
-        </div>
+  :root {
+    --accent: #f26f23;
+    --bg: #0a0a0a;
+    --surface: #111111;
+    --surface2: #181818;
+    --border: #222222;
+    --text: #e8e8e8;
+    --muted: #666666;
+  }
+
+  body { background: var(--bg); color: var(--text); }
+
+  .sites-page { padding: 100px 0; min-height: 90vh; }
+
+  .section-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-label::before {
+    content: '';
+    display: inline-block;
+    width: 20px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  .page-title {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2.2rem, 5vw, 3.5rem);
+    font-weight: 800;
+    color: #fff;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin: 0 0 12px;
+  }
+
+  .page-sub {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    color: var(--muted);
+    font-weight: 300;
+    max-width: 480px;
+    line-height: 1.7;
+    margin-bottom: 64px;
+  }
+
+  .site-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 28px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    transition: border-color 0.25s, transform 0.25s;
+    text-decoration: none;
+    color: inherit;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .site-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+  }
+
+  .site-card:hover {
+    border-color: #333;
+    transform: translateY(-4px);
+    color: inherit;
+  }
+
+  .site-card:hover::after { transform: scaleX(1); }
+
+  .site-icon {
+    width: 44px;
+    height: 44px;
+    background: rgba(242,111,35,0.1);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent);
+    font-size: 18px;
+    margin-bottom: 18px;
+  }
+
+  .site-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #fff;
+    margin: 0 0 8px;
+  }
+
+  .site-desc {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.83rem;
+    color: #666;
+    line-height: 1.65;
+    margin: 0 0 20px;
+    font-weight: 300;
+    flex: 1;
+  }
+
+  .site-url {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.72rem;
+    color: var(--accent);
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+    margin-top: 48px;
+  }
+
+  .back-btn:hover { color: var(--accent); }
+</style>
+
+<div class="sites-page">
+  <div class="container">
+    <div class="section-label">Resources</div>
+    <h1 class="page-title">Useful Sites for<br>Developers</h1>
+    <p class="page-sub">Handpicked websites I return to again and again — documentation, communities, and tools that actually matter.</p>
+
+    <div class="row g-4">
+
+      <div class="col-md-6 col-lg-4">
+        <a href="https://stackoverflow.com/" target="_blank" class="site-card">
+          <div class="site-icon"><i class="fab fa-stack-overflow"></i></div>
+          <h3 class="site-title">Stack Overflow</h3>
+          <p class="site-desc">The go-to Q&amp;A community for developers. If you have a bug, someone here has already solved it.</p>
+          <span class="site-url">stackoverflow.com <i class="fas fa-arrow-right"></i></span>
+        </a>
+      </div>
+
+      <div class="col-md-6 col-lg-4">
+        <a href="https://github.com/" target="_blank" class="site-card">
+          <div class="site-icon"><i class="fab fa-github"></i></div>
+          <h3 class="site-title">GitHub</h3>
+          <p class="site-desc">Host, collaborate, and version-control your code. The world's largest developer platform.</p>
+          <span class="site-url">github.com <i class="fas fa-arrow-right"></i></span>
+        </a>
+      </div>
+
+      <div class="col-md-6 col-lg-4">
+        <a href="https://developer.mozilla.org/" target="_blank" class="site-card">
+          <div class="site-icon"><i class="fab fa-firefox-browser"></i></div>
+          <h3 class="site-title">MDN Web Docs</h3>
+          <p class="site-desc">The definitive reference for HTML, CSS, and JavaScript — maintained by Mozilla and the community.</p>
+          <span class="site-url">developer.mozilla.org <i class="fas fa-arrow-right"></i></span>
+        </a>
+      </div>
+
+      <div class="col-md-6 col-lg-4">
+        <a href="https://docs.djangoproject.com/" target="_blank" class="site-card">
+          <div class="site-icon"><i class="fas fa-book"></i></div>
+          <h3 class="site-title">Django Docs</h3>
+          <p class="site-desc">Official Django documentation — comprehensive, well-structured, and always up to date.</p>
+          <span class="site-url">docs.djangoproject.com <i class="fas fa-arrow-right"></i></span>
+        </a>
+      </div>
+
+      <div class="col-md-6 col-lg-4">
+        <a href="https://getbootstrap.com/" target="_blank" class="site-card">
+          <div class="site-icon"><i class="fab fa-bootstrap"></i></div>
+          <h3 class="site-title">Bootstrap</h3>
+          <p class="site-desc">The world's most popular CSS framework for responsive, mobile-first front-end development.</p>
+          <span class="site-url">getbootstrap.com <i class="fas fa-arrow-right"></i></span>
+        </a>
+      </div>
+
+      <div class="col-md-6 col-lg-4">
+        <a href="https://css-tricks.com/" target="_blank" class="site-card">
+          <div class="site-icon"><i class="fas fa-paint-brush"></i></div>
+          <h3 class="site-title">CSS-Tricks</h3>
+          <p class="site-desc">Tips, tricks, and techniques for all things CSS — from flexbox to animations to custom properties.</p>
+          <span class="site-url">css-tricks.com <i class="fas fa-arrow-right"></i></span>
+        </a>
+      </div>
+
     </div>
-</section>
+
+    <a href="{% url 'tools' %}" class="back-btn">
+      <i class="fas fa-arrow-left"></i> Back to Tools
+    </a>
+  </div>
+</div>
 
 {% endblock content %}
