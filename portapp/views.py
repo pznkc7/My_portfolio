@@ -55,19 +55,19 @@ def about(request):
 
 def tools(request):
 
-    return render(request,'portapp/tools.html')
+    return render(request,'portapp/tools/tools.html')
 
 def movieguide(request):
     
-    return render(request,'portapp/movieguide.html')
+    return render(request,'portapp/tools/movieguide.html')
 
 def usefulsites(request):
 
-    return render(request,'portapp/sites.html')
+    return render(request,'portapp/tools/sites.html')
 
 def music_player(request):
     songs = Song.objects.all()
     context = {
         'songs': songs
     }
-    return render(request, 'portapp/music_player.html', context)
+    return render(request, 'portapp/tools/music_player.html', context)

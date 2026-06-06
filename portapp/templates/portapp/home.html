@@ -77,7 +77,7 @@
   }
 
   .hero-name {
-    font-family: 'Syne', sans-serif;
+    font-family: var(--font-heading);
     font-size: clamp(3rem, 7vw, 5.5rem);
     font-weight: 800;
     line-height: 1.0;
@@ -91,7 +91,7 @@
   }
 
   .hero-role {
-    font-family: 'Syne', sans-serif;
+    font-family: var(--font-heading);
     font-size: clamp(1rem, 2.5vw, 1.4rem);
     font-weight: 500;
     color: var(--muted);
@@ -163,70 +163,85 @@
     transform: translateY(-1px);
   }
 
-  /* Profile image */
+  /* ── Profile widget ── */
+  .profile-outer {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 320px;
+    height: 320px;
+  }
+
+  /* SVG clock — fills the outer container */
+  .profile-clock-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+    overflow: visible;
+  }
+
+  /* Photo circle — sits in the centre, tight inside the clock ring */
   .profile-wrap {
     position: relative;
-    display: inline-block;
-  }
-
-  .profile-ring {
-    position: absolute;
-    inset: -8px;
+    width: 286px;
+    height: 286px;
     border-radius: 50%;
-    border: 1px solid rgba(242,111,35,0.3);
-    animation: spin-slow 12s linear infinite;
-  }
-
-  .profile-ring::before {
-    content: '';
-    position: absolute;
-    top: -3px;
-    left: 50%;
-    width: 6px;
-    height: 6px;
-    background: var(--accent);
-    border-radius: 50%;
-    transform: translateX(-50%);
-  }
-
-  @keyframes spin-slow {
-    from { transform: rotate(0deg); }
-    to   { transform: rotate(360deg); }
+    overflow: hidden;
+    border: 1px solid #2a2a2a;
+    flex-shrink: 0;
+    z-index: 2;
+    box-shadow:
+      0 0 0 1px rgba(242,111,35,0.16),
+      0 0 32px rgba(242,111,35,0.08),
+      0 12px 48px rgba(0,0,0,0.6);
   }
 
   .profile-img {
-    width: 280px;
-    height: 280px;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
-    border-radius: 50%;
+    object-position: center 15%;
     display: block;
-    filter: grayscale(20%);
-    transition: filter 0.3s;
+    transform: scale(0.94);
+    transform-origin: center 35%;
+    filter: grayscale(10%);
+    transition: filter 0.3s, transform 0.4s;
   }
 
-  .profile-img:hover { filter: grayscale(0%); }
+  .profile-img:hover {
+    filter: grayscale(0%);
+    transform: scale(1.18);
+    transform-origin: center 35%;
+  }
 
-  /* Status badge */
+  /* Status badge — centred below the image circle */
   .status-badge {
     position: absolute;
-    bottom: 12px;
-    right: -8px;
-    background: var(--surface2);
-    border: 1px solid var(--border);
+    bottom: 2px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(18,18,18,0.96);
+    border: 1px solid #2a2a2a;
     border-radius: 20px;
-    padding: 6px 14px;
+    padding: 5px 13px;
     font-family: 'Inter', sans-serif;
-    font-size: 0.72rem;
+    font-size: 0.68rem;
     color: #4ade80;
     display: flex;
     align-items: center;
     gap: 6px;
     white-space: nowrap;
+    z-index: 5;
+    backdrop-filter: blur(6px);
   }
 
   .status-dot {
-    width: 6px;
-    height: 6px;
+    width: 5px;
+    height: 5px;
     background: #4ade80;
     border-radius: 50%;
     animation: pulse 2s infinite;
@@ -234,7 +249,7 @@
 
   @keyframes pulse {
     0%, 100% { opacity: 1; }
-    50% { opacity: 0.4; }
+    50%       { opacity: 0.3; }
   }
 
   /* Stats row */
@@ -249,7 +264,7 @@
   .stat-item { text-align: left; }
 
   .stat-num {
-    font-family: 'Syne', sans-serif;
+    font-family: var(--font-heading);
     font-size: 1.8rem;
     font-weight: 700;
     color: #fff;
@@ -298,7 +313,7 @@
   }
 
   .section-title {
-    font-family: 'Syne', sans-serif;
+    font-family: var(--font-heading);
     font-size: clamp(1.8rem, 4vw, 2.8rem);
     font-weight: 700;
     color: #fff;
@@ -362,7 +377,7 @@
   }
 
   .skill-title {
-    font-family: 'Syne', sans-serif;
+    font-family: var(--font-heading);
     font-size: 1.05rem;
     font-weight: 600;
     color: #fff;
@@ -410,12 +425,12 @@
     transform: translate(-50%, -50%);
     width: 600px;
     height: 300px;
-    background: radial-gradient(ellipse, rgba(242,111,35,0.07) 0%, transparent 70%);
+    background: radial-gradient(ellipse, rgba(242,111,35,0.07) 0%,    transparent 70%);
     pointer-events: none;
   }
 
   .cta-title {
-    font-family: 'Syne', sans-serif;
+    font-family: var(--font-heading);
     font-size: clamp(2rem, 5vw, 3.5rem);
     font-weight: 800;
     color: #fff;
@@ -477,11 +492,11 @@
         <h1 class="hero-name">
           Puzan<br><span class="accent-word">Kc</span>
         </h1>
-        <p class="hero-role">Django Developer &amp; Backend Engineer</p>
-        <p class="hero-desc">I craft secure, scalable web systems with Python &amp; Django — so the front-end can shine and users enjoy a flawless experience.</p>
+        <p class="hero-role">  Mastering Python & Django</p>
+        <p class="hero-desc">Passionate about creating efficient and scalable web applications with Bootstrap, Python and Django.</p>
         <div class="hero-btns">
-          <a href="{% url 'certificate' %}" class="btn-primary-custom">
-            <i class="fas fa-award"></i> View Certificates
+          <a href="{% static 'cv/puzan_cv.pdf' %}" download="Puzan_Kc_CV.pdf" class="btn-primary-custom">
+            <i class="fas fa-download"></i> Download CV
           </a>
           <a href="{% url 'contact' %}" class="btn-ghost-custom">
             <i class="fas fa-paper-plane"></i> Contact Me
@@ -490,27 +505,72 @@
 
         <div class="stats-row">
           <div class="stat-item">
-            <div class="stat-num">2<span>+</span></div>
+            <div class="stat-num">1<span>+</span></div>
             <div class="stat-label">Years Coding</div>
           </div>
           <div class="stat-item">
-            <div class="stat-num">10<span>+</span></div>
+            <div class="stat-num">2<span>+</span></div>
             <div class="stat-label">Projects Built</div>
           </div>
-          <div class="stat-item">
+          {% comment %} <div class="stat-item">
             <div class="stat-num">5<span>+</span></div>
             <div class="stat-label">Certificates</div>
-          </div>
+          </div> {% endcomment %}
         </div>
       </div>
 
       <div class="col-lg-6 text-center mt-5 mt-lg-0">
-        <div class="profile-wrap mx-auto" style="width: fit-content;">
-          <div class="profile-ring"></div>
-          <img src="{% static 'images/profile.png' %}" alt="Puzan Kc" class="profile-img">
-          <div class="status-badge">
-            <span class="status-dot"></span> Open to opportunities
+        <div class="profile-outer mx-auto">
+
+          <!-- ── Clock SVG (320×320 viewBox, centre = 160,160) ── -->
+          <svg class="profile-clock-svg" viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+
+            <!-- Outermost faint guide ring -->
+            <circle cx="160" cy="160" r="158" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+
+            <!-- Main clock ring (just outside the photo) -->
+            <circle cx="160" cy="160" r="146" fill="none"
+                    stroke="rgba(242,111,35,0.15)" stroke-width="1"/>
+
+            <!-- Hour tick marks (12 total) -->
+            <g id="hour-ticks"></g>
+
+            <!-- Minute tick marks (60 total) -->
+            <g id="min-ticks"></g>
+
+            <!-- Second sweep arc -->
+            <circle id="sec-arc" cx="160" cy="160" r="146"
+                    fill="none" stroke="#f26f23" stroke-width="1.5"
+                    stroke-linecap="round" stroke-dasharray="0 930"
+                    transform="rotate(-90 160 160)"
+                    style="transition: stroke-dasharray 0.25s linear;"/>
+
+            <!-- Orbiting second dot -->
+            <circle id="sec-dot" cx="160" cy="12" r="4" fill="#f26f23"
+                    style="filter:drop-shadow(0 0 5px #f26f23);"/>
+
+            <!-- Digital time display at bottom -->
+            <text id="clock-time" x="160" y="320"
+                  text-anchor="middle"
+                  dominant-baseline="middle"
+                  font-family="'Inter',monospace"
+                  font-size="10"
+                  font-weight="600"
+                  letter-spacing="3.5"
+                  fill="rgba(242,111,35,0.65)">00:00:00</text>
+
+          </svg>
+
+          <!-- Photo -->
+          <div class="profile-wrap">
+            <img src="{% static 'images/profilepicture.png' %}" alt="Puzan Kc" class="profile-img">
           </div>
+
+          {% comment %} <div class="status-badge"> {% endcomment %}
+            {% comment %} <span class="status-dot"></span> {% endcomment %}
+             {% comment %} Open to opportunities {% endcomment %}
+          {% comment %} </div> {% endcomment %}
+
         </div>
       </div>
     </div>
@@ -587,5 +647,71 @@
     </a>
   </div>
 </section>
+
+<script>
+(function () {
+  const CX = 160, CY = 160, R = 148;
+  const CIRCUMFERENCE = 2 * Math.PI * R; // ≈ 929.9
+
+  /* ── Draw hour ticks ── */
+  const hourGroup = document.getElementById('hour-ticks');
+  const minGroup  = document.getElementById('min-ticks');
+
+  for (let i = 0; i < 60; i++) {
+    const angle = (i / 60) * 2 * Math.PI - Math.PI / 2;
+    const isHour = i % 5 === 0;
+    const inner  = isHour ? R - 10 : R - 5;
+    const outer  = R + 1;
+    const x1 = CX + inner * Math.cos(angle);
+    const y1 = CY + inner * Math.sin(angle);
+    const x2 = CX + outer * Math.cos(angle);
+    const y2 = CY + outer * Math.sin(angle);
+
+    const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+    line.setAttribute('x1', x1); line.setAttribute('y1', y1);
+    line.setAttribute('x2', x2); line.setAttribute('y2', y2);
+    line.setAttribute('stroke', isHour ? 'rgba(242,111,35,0.55)' : 'rgba(255,255,255,0.1)');
+    line.setAttribute('stroke-width', isHour ? '2' : '1');
+    line.setAttribute('stroke-linecap', 'round');
+    (isHour ? hourGroup : minGroup).appendChild(line);
+  }
+
+  /* ── Tick function ── */
+  const secArc = document.getElementById('sec-arc');
+  const secDot = document.getElementById('sec-dot');
+  const clockTime = document.getElementById('clock-time');
+
+  function tick() {
+    const now  = new Date();
+    const h    = now.getHours();
+    const m    = now.getMinutes();
+    const s    = now.getSeconds();
+    const ms   = now.getMilliseconds();
+
+    /* smooth second fraction */
+    const secFrac = (s + ms / 1000) / 60;
+
+    /* — Orbiting dot position — */
+    const dotAngle = secFrac * 2 * Math.PI - Math.PI / 2;
+    const dotX = CX + R * Math.cos(dotAngle);
+    const dotY = CY + R * Math.sin(dotAngle);
+    secDot.setAttribute('cx', dotX);
+    secDot.setAttribute('cy', dotY);
+
+    /* — Second arc (fill proportion) — */
+    const arcLen = secFrac * CIRCUMFERENCE;
+    secArc.setAttribute('stroke-dasharray', arcLen + ' ' + (CIRCUMFERENCE - arcLen));
+
+    /* — Digital time — */
+    const hh = String(h).padStart(2,'0');
+    const mm = String(m).padStart(2,'0');
+    const ss = String(s).padStart(2,'0');
+    clockTime.textContent = hh + ':' + mm + ':' + ss;
+  }
+
+  tick();
+  setInterval(tick, 100); // update 10× per second for smooth dot movement
+})();
+</script>
 
 {% endblock content %}
