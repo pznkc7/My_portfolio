@@ -13,13 +13,6 @@ def home(request):
     return render(request,'portapp/home.html')
 
 
-def certificate(request):
-
-    certificates = Certificate.objects.all() #retrieve all objects of certificate model
-    context = {
-        'certificates': certificates
-    }
-    return render(request, 'portapp/certificate.html',context)
 
 def contact(request):
     if request.method == 'POST':

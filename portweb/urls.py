@@ -27,7 +27,6 @@ urlpatterns = [
     path("",views.home, name ='home'),
     path("contact/",views.contact, name ='contact'),
     path("about/",views.about, name ='about'),
-    path("certificate/",views.certificate,name='certificate'),
     path("tools/",views.tools, name='tools'),
     path("movieguide/",views.movieguide, name='movieguide'),
     path("usefulsites/",views.usefulsites, name='usefulsites'),
